@@ -1,0 +1,51 @@
+import collections
+import itertools
+import os
+from pathlib import Path
+import torch
+import pandas as pd
+import git
+
+class sliceable_deque(collections.deque):
+    def __getitem__(self, index):
+        try:
+            return collections.deque.__getitem__(self, index)
+        except TypeError:
+            return type(self)(itertools.islice(self, index.start,
+                                               index.stop, index.step))
+
+@staticmethod
+def prepare_data(data: pd.DataFrame, lookback: int) -> torch.Tensor:
+    """
+    constructs tensor applying a lookback to the data
+    inputs:
+        data: torch.Tensor 1d
+        lookback: int amount of datapoints in the past to send with
+    
+    returns:
+        data: torch.Tensor 2d
+        newest point is on the right side!
+    """
+    lookback +=1
+    data = torch.Tensor(data.values).squeeze()
+
+    res_tens = torch.zeros(data.shape[0]-lookback,lookback)
+
+    for i, _ in enumerate(data,lookback):
+        try:
+            res_tens[i,:] = data[i-lookback:i]
+        except IndexError:
+            continue
+
+    return res_tens
+
+
+@staticmethod
+def get_git_root():
+    """
+    returns the root of the git repository it is called in
+    """ 
+    cwd = os.getcwd()
+    git_root = git.Repo(cwd,search_parent_directories= True)
+    git_root = Path(git_root.git.rev_parse("--show-toplevel"))
+    return git_root

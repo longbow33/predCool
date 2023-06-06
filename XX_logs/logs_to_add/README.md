@@ -1,0 +1,2 @@
+here you can place logfiles and run 03_starting_over/construct_excel_files.py to start extracting the data.
+the next step is to use the combiner runfile of 02_first_model to combine the .csv files into one logfile
