@@ -18,7 +18,7 @@
 
 - try to overfit your data on a smaller batchsize to see if model is capable of learning data
 
-- [ ] plot a graph of the last 20 losses or similar to view trend even if outlier is at the start of training
+- [x] plot a graph of the last 20 losses or similar to view trend even if outlier is at the start of training
 
 ### SISOLSTM
 
@@ -63,6 +63,10 @@
   
   - [ ] test
 
+  - acceptable performance in steady level unaccelerated flight, edge cases bad performance
+
+- [ ] make edge cases more prominent by making every % of throttle equally probable
+
 ### GENERAL
 
 - [ ] refactor code, remove duplicated files and improve structure
@@ -87,3 +91,24 @@
 - [ ] include BAT logs to monitor the current (?)
   
   - [ ] first see the data to ensure it is useful
+
+### Data Normalisation
+
+- [ ]  View minimum and maximum values of data
+  
+  | Att   | Min     | Max    | ChosenMin | ChosenMax |
+  | ----- | ------- | ------ | --------- | --------- |
+  | Thr   | 0       | 100    | 0         | 100       |
+  | Ail   | -4500   | 4500   | -4500     | 4500      |
+  | Elev  | -4500   | 4500   | -4500     | 4500      |
+  | Rudd  | -4500   | 4500   | -4500     | 4500      |
+  | Roll  | -179.92 | 179.92 | -180      | 180       |
+  | Pitch | -89.8   | 77.85  | -90       | 90        |
+  | Yaw   | 0       | 0      | 0         | 1         |
+  | Spd   | 0       | 46.4   | 0         | 60        |
+  | GyrX  | -3.96   | 4.77   | -15       | 15        |
+  | GyrY  | -3.55   | 12.06  | -15       | 15        |
+  | GyrZ  | -10.77  | 4.44   | -15       | 15        |
+  | AccX  | -129.83 | 43     | -150      | 150       |
+  | AccY  | -69.72  | 82.33  | -150      | 150       |
+  | AccZ  | -111.96 | 12.60  | -150      | 150       |

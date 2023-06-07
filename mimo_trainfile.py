@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import random
 
-from utilities import get_git_root
+from utilities import get_git_root, normalize
 from model import MIMOLSTM
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -20,7 +20,7 @@ LOG_FOLDER = os.path.join(GIT_ROOT,"XX_logs","logs")
 LOGS = [x for x in os.listdir(LOG_FOLDER)]
 BATCHSIZE = 2000
 
-
+use_pretrained = False
 
 print("loading logs")
 full_logs = []
@@ -32,14 +32,15 @@ topick = ["Thr","Ail","Elev","Rudd","Roll","Pitch",
           "Yaw","Spd","GyrX","GyrY","GyrZ","AccX","AccY","AccZ"]
 
 model = MIMOLSTM(input_size=len(topick),lookback=LOOKBACK).to(DEVICE)
-model.load_state_dict(
-    torch.load(os.path.join(GIT_ROOT,"XX_logs","statedicts","mimo_lstm_statedict.pt"))
-)
+if use_pretrained:
+    model.load_state_dict(
+        torch.load(os.path.join(GIT_ROOT,"XX_logs","statedicts","mimo_lstm_statedict.pt"))
+    )
 optimizer = torch.optim.Adam(params=model.parameters(),
                              lr = LR)
 loss_fn = nn.MSELoss()
 
-full_logs = torch.Tensor(pd.concat(full_logs)[topick].values).to(DEVICE)
+full_logs = torch.Tensor(normalize(pd.concat(full_logs)[topick]).values).to(DEVICE)
     
 losses = []
 
@@ -88,7 +89,7 @@ for epoch in tqdm(range(EPOCHS)):
             print("not able to plot last 20")
 torch.save(model.state_dict(),
            os.path.join(GIT_ROOT,"XX_logs","statedicts",
-                        "mimo_lstm_statedict.pt")
+                        "mimo_lstm_statedict.pt_normalized")
             )
-torch.save(losses,os.path.join(GIT_ROOT,"mimo_losses.pt"))
+torch.save(losses,os.path.join(GIT_ROOT,"mimo_losses_normalized.pt"))
 print("done and saved")

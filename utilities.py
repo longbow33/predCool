@@ -52,3 +52,18 @@ def get_git_root():
     git_root = git.Repo(cwd,search_parent_directories= True)
     git_root = Path(git_root.git.rev_parse("--show-toplevel"))
     return git_root
+
+@staticmethod
+def normalize(data) -> pd.DataFrame: 
+    """
+    returns a normalized version of the data according
+    to the minima and maxima givein in minmaxtable.xlsx
+    """
+    minmaxtable = pd.read_excel(
+        os.path.join(get_git_root(),"minmaxtable.xlsx"),
+        index_col=0
+    )
+    for att in data:
+        att_min, att_max = minmaxtable[att]
+        data[att] = (data[att]-att_min)/(att_max-att_min)
+    return data
