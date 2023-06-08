@@ -28,7 +28,7 @@ class Diversifyer:
         returnset = torch.zeros([self.num_sets,self.max_thr+1,48,10])
         print(returnset.shape)
 
-        split_up_data = [[] for _ in range(self.max_thr+1)]
+        split_up_data = []*(self.max_thr+1)
 
         for entry in dataset:
             

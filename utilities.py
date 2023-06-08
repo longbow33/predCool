@@ -3,6 +3,7 @@ import itertools
 import os
 import matplotlib.pyplot as plt
 from pathlib import Path
+import random
 import torch
 import pandas as pd
 import git
@@ -67,3 +68,16 @@ def normalize(data) -> pd.DataFrame:
         att_min, att_max = minmaxtable[att]
         data[att] = (data[att]-att_min)/(att_max-att_min)
     return data
+
+@staticmethod
+def pick_places(data: torch.Tensor,lookback = 100,normalisation_fac = 1) -> list:
+    places_sorted = [[] for _ in range(101)]
+
+    print("diversifying")
+    for it, entry in enumerate(tqdm(data)):
+        thr_val = int(entry[0]*normalisation_fac)
+        places_sorted[thr_val].append(it)
+    
+    [print(min(x)) for x in places_sorted if min(x) < lookback]
+
+    return places_sorted
