@@ -41,15 +41,18 @@ SKIP = 2500
 plot_bars = False
 
 #heat control
-pid = PID(.2,.7,0)
-heat = 20
+CONTROL_CONSTANTS = [.1,1,0]
+pres_pid = PID(*CONTROL_CONSTANTS)
+fut_pid = PID(*CONTROL_CONSTANTS)
+fut_heat = 20
+pres_heat = 20
 set_temp = 20
-heat_queue = deque([],LOOKFORWARD)
+pres_heat_queue = deque([],LOOKFORWARD)
+fut_heat_queue = deque([],LOOKFORWARD)
 
 for it, _ in enumerate(full_logs, LOOKBACK+SKIP):
     logs_to_look_at = full_logs[-LOOKBACK+it:it,:].unsqueeze(0)
-    plt.plot(range(-100,0),logs_to_look_at[0,:,0])
-    for i in range(LOOKFORWARD):
+    for i in range(LOOKFORWARD-1):
         data_pred = model.forward(logs_to_look_at)
         logs_to_look_at = torch.cat(
             [logs_to_look_at[:,1:,:],
@@ -59,23 +62,35 @@ for it, _ in enumerate(full_logs, LOOKBACK+SKIP):
     
     gt = full_logs[it:it+LOOKFORWARD,0].detach().numpy()
     pred = logs_to_look_at[0,-LOOKFORWARD-2:,0].detach().numpy()
-    # control on the most recent point    
-    cont_inp = pid.step(set_temp,heat)
-    if abs(cont_inp) > 1000:
-        print("prevent overflow")
-        exit()
-    heat += (logs_to_look_at[0,0,0].detach().numpy()*0.3)- cont_inp
-    heat_queue.append(heat)
+    
+    # control on the most recent point
+    # future control: seems to be wrong approach, tries to get rid of heat
+    # before it appears. but get rid of heat WHEN it appears
+    # -> calculate heat and then the neccessary control input
+    # e.g. how much throttle is expected -> how much heat -> how much cooling
+    # at certain time step.
+    pres_cont_inp = pres_pid.step(set_temp,pres_heat)
+    exp_heat = fut_heat+(sum(pred)/len(pred))*0.3
+    fut_cont_inp = fut_pid.step(set_temp,(exp_heat*0.9)+(fut_heat*0.1))
 
-    plt.plot(pred,"red")
-    plt.plot(gt,"blue")
+    pres_heat += (logs_to_look_at[0,0,0].detach().numpy()*0.3) - pres_cont_inp
+    fut_heat += (logs_to_look_at[0,0,0].detach().numpy()*0.3) - fut_cont_inp
+    if abs(fut_cont_inp) > 1000:
+        print("future control input over 1000")
+        exit()
+    pres_heat_queue.append(pres_heat)
+    fut_heat_queue.append(fut_heat)
 
     
-    plt.plot(range(-len(heat_queue),0),heat_queue,"green")
-
+    plt.grid(True)
+    plt.plot(range(-len(pres_heat_queue),0),pres_heat_queue,"green")
+    plt.plot(range(-len(fut_heat_queue),0),fut_heat_queue,"violet")
+    plt.savefig("pid_only.png")
+    plt.plot(range(-100,0),full_logs[-LOOKBACK+it:it,0])
+    plt.plot(pred,"red")
+    plt.plot(gt,"blue")
     plt.axis([-LOOKBACK,LOOKFORWARD-1,0,110])
     plt.title("blue = ground truth; red = prediction; green pid without pred")
-    plt.grid(True)
     plt.savefig("pidtest.png")
     plt.clf()
     print(it, end = "\r")

@@ -62,19 +62,47 @@
   - good training performance
   
   - [ ] test
-
+  
   - acceptable performance in steady level unaccelerated flight, edge cases bad performance
 
 - [ ] make edge cases more prominent by making every % of throttle equally probable
 
+### END TO END
+
+- Rules:
+  
+  - INPUT:
+    
+    - Passed Flightdata
+    
+    - Passed Heat
+    
+    - Current Fluid Flow
+  
+  - OUTPUT:
+    
+    - Increase / Decrease Fluid Flow
+    
+    - or increase / reduce heat taken from system (might be better to get around heat calculations)
+  
+  - LOSS:
+    
+    - Desired Heat, Current Heat ?
+    
+    - has to take into account the future expected heat ?
+
+- LSTM ? no time series prediction really
+
+- trainloop just run the data through and thats it ?
+
 ### GENERAL
 
-- [ ] refactor code, remove duplicated files and improve structure
+- [x] refactor code, remove duplicated files and improve structure
   
   - [ ] maybe put the loghandling into the utilities file, avoid using os.system to run them
   - [x] delete all duplicates
   - [x] move loghandling into log handling folder ?
-  - [ ] utilities file is duplicate because of imports from parent folder not possible (look it up)
+  - [x] utilities file is duplicate because of imports from parent folder not possible (look it up)
 
 - [x] remove BARO from the data, if existing (not every logfile has it and it carries minimal information if any) 
   
@@ -92,9 +120,19 @@
   
   - [ ] first see the data to ensure it is useful
 
+- Similar to end to end approach: is just the next data point of interest ?
+  
+  - control just acts from one point to another
+  
+  - reduce computing time
+  
+  - no, if fluid flow is sluggish you have to plan ahead more
+  
+  - yes, predictions are too fickle to trust them, maybe adjust training to make points in the nearer future more reliable ?
+
 ### Data Normalisation
 
-- [ ]  View minimum and maximum values of data
+- [ ] View minimum and maximum values of data
   
   | Att   | Min     | Max    | ChosenMin | ChosenMax |
   | ----- | ------- | ------ | --------- | --------- |
