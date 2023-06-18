@@ -39,7 +39,5 @@ class MIMOLSTM(nn.Module):
     def forward(self,x) -> torch.Tensor:
         x, _ = self.lstm(x)
         x = torch.reshape(x,(x.shape[0],1,-1))
-        if x.shape[2] != self.hidden_size*self.lookback:
-            print(x.shape)
         x = self.layers(x).squeeze()
         return x
