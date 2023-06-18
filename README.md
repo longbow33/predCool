@@ -55,17 +55,18 @@
   
   - [ ] reduce layers of lstm ?
 
-- [ ] first try -> second try: learning rate *10
+- [x] first try -> second try: learning rate *10
 
 - [x] try to rearrange model to just predict one timestep at a time
   
   - good training performance
   
-  - [ ] test
+  - [x] test
   
   - acceptable performance in steady level unaccelerated flight, edge cases bad performance
 
-- [ ] make edge cases more prominent by making every % of throttle equally probable
+- [x] make edge cases more prominent by making every % of throttle equally probable
+  - not really the use case, since it is predicting changes more frequently than occuring.
 
 ### END TO END
 
@@ -90,10 +91,14 @@
     - Desired Heat, Current Heat ?
     
     - has to take into account the future expected heat ?
+      
+      - not sure about this, since the future expected heat could run internally somewhere ?
 
 - LSTM ? no time series prediction really
 
 - trainloop just run the data through and thats it ?
+
+- has to be from start to end consecutively ?
 
 ### GENERAL
 
@@ -132,7 +137,7 @@
 
 ### Data Normalisation
 
-- [ ] View minimum and maximum values of data
+- [x] View minimum and maximum values of data
   
   | Att   | Min     | Max    | ChosenMin | ChosenMax |
   | ----- | ------- | ------ | --------- | --------- |

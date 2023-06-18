@@ -13,8 +13,8 @@ from model import MIMOLSTM
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"device is {DEVICE}")
-EPOCHS = 20000
-LR = 0.0001 #second training LR from 0.001 to 0.0001
+EPOCHS = 40000
+LR = 0.00001 #second training LR from 0.001 to 0.0001
 LOOKBACK = 100
 GIT_ROOT = get_git_root()
 LOG_FOLDER = os.path.join(GIT_ROOT,"XX_logs","logs")
@@ -102,7 +102,7 @@ for epoch in tqdm(range(EPOCHS)):
         plt.clf()
 torch.save(model.state_dict(),
            os.path.join(GIT_ROOT,"XX_logs","statedicts",
-                        "mimo_lstm_statedict_normalized.pt")
+                        "mimo_lstm_statedict_normalized_error.pt")
             )
 torch.save(losses,os.path.join(GIT_ROOT,"mimo_losses_normalized.pt"))
 print("done and saved")
