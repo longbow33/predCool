@@ -13,7 +13,7 @@ from model import MIMOLSTM
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"device is {DEVICE}")
-EPOCHS = 5000
+EPOCHS = 20000
 LR = 0.0001 #second training LR from 0.001 to 0.0001
 LOOKBACK = 100
 GIT_ROOT = get_git_root()
@@ -58,6 +58,9 @@ for epoch in tqdm(range(EPOCHS)):
     try:
         data_to_pred_on = torch.stack(
             [full_logs[-LOOKBACK+place:place,:] for place in places],1).swapaxes(1,0)
+        ## GAUSSIAN ERROR TO INCLUDE! (presumably makes model more rigid, avoids overfitting?)
+        random_to_apply = (torch.rand(data_to_pred_on.shape,device= DEVICE)-0.5)*0.01
+        data_to_pred_on = data_to_pred_on+random_to_apply
     except RuntimeError as e:
         print(e,min(places),max(places))
         exit()
