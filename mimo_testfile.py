@@ -10,6 +10,7 @@ from utilities import get_git_root, normalize
 from model import MIMOLSTM
 from PID import PID
 
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 LOOKBACK = 100
 LOOKFORWARD = 100
 GIT_ROOT = get_git_root()
@@ -32,7 +33,8 @@ full_logs = torch.Tensor(pd.concat(full_logs)[topick].values)
 
 model = MIMOLSTM(input_size=len(topick),lookback=LOOKBACK)
 model.load_state_dict(torch.load(
-        os.path.join(GIT_ROOT,"XX_logs","statedicts",STATEDICT_TO_LOAD)
+        os.path.join(GIT_ROOT,"XX_logs","statedicts",STATEDICT_TO_LOAD),
+        map_location = DEVICE
 ))
 model.eval()
 
