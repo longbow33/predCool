@@ -28,11 +28,10 @@ class Motor():
         # assuming constant specific heat
         # assuming the excess mass will just be emitted out of the motor
         c_hydr = 14.3 #J/(gK)
-        ref_temp = 0
         # heat motor due to thrust
-        q_prod = 8.5*thrust*(1+1*(self.temperature-ref_temp)) #J
-        self.temperature += q_prod/(self.volume_reservoir*c_hydr)
-
-        # cool motor due to fluidflow
-        self.temperature = ((fluid_temperature*fluidflow)+(self.temperature*self.volume_reservoir)) /(self.volume_reservoir+fluidflow)
+        q_prod = thrust*.04 #J
+        q_cool = -c_hydr*fluidflow*(self.temperature-fluid_temperature)
+        print(q_cool)
+        q_bil = q_cool+q_prod
+        self.temperature += q_bil
         return self.temperature
