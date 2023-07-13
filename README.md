@@ -14,6 +14,18 @@
 
 ## TODO
 
+- scrap most of the stuff since the throttle prediction is no longer of interest
+
+- try to predict the heat in the system directly by reading temperature sensory data
+
+- should produce a "model" in the NN which is actual gain of information
+
+- then develop a model predictive control algorithmn cooling the motor accordingly
+
+- use flightsimulator to produce non- autopilot data (flightgear)
+
+- read into "transformers" as an alternative to lstm which is possibly using data more efficiently
+
 ### General good Tip:
 
 - try to overfit your data on a smaller batchsize to see if model is capable of learning data
@@ -55,17 +67,19 @@
   
   - [ ] reduce layers of lstm ?
 
-- [ ] first try -> second try: learning rate *10
+- [x] first try -> second try: learning rate *10
 
 - [x] try to rearrange model to just predict one timestep at a time
   
   - good training performance
   
-  - [ ] test
+  - [x] test
   
   - acceptable performance in steady level unaccelerated flight, edge cases bad performance
 
-- [ ] make edge cases more prominent by making every % of throttle equally probable
+- [x] make edge cases more prominent by making every % of throttle equally probable
+  
+  - not really the use case, since it is predicting changes more frequently than occuring.
 
 ### END TO END
 
@@ -90,10 +104,14 @@
     - Desired Heat, Current Heat ?
     
     - has to take into account the future expected heat ?
+      
+      - not sure about this, since the future expected heat could run internally somewhere ?
 
 - LSTM ? no time series prediction really
 
 - trainloop just run the data through and thats it ?
+
+- has to be from start to end consecutively ?
 
 ### GENERAL
 
@@ -132,7 +150,7 @@
 
 ### Data Normalisation
 
-- [ ] View minimum and maximum values of data
+- [x] View minimum and maximum values of data
   
   | Att   | Min     | Max    | ChosenMin | ChosenMax |
   | ----- | ------- | ------ | --------- | --------- |
