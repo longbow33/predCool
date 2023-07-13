@@ -14,6 +14,14 @@
 
 ## TODO
 
+- scrap most of the stuff since the throttle prediction is no longer of interest
+
+- try to predict the heat in the system directly by reading temperature sensory data
+
+- should produce a "model" in the NN which is actual gain of information
+
+- then develop a model predictive control algorithmn cooling the motor accordingly
+
 ### General good Tip:
 
 - try to overfit your data on a smaller batchsize to see if model is capable of learning data
@@ -66,6 +74,7 @@
   - acceptable performance in steady level unaccelerated flight, edge cases bad performance
 
 - [x] make edge cases more prominent by making every % of throttle equally probable
+  
   - not really the use case, since it is predicting changes more frequently than occuring.
 
 ### END TO END
