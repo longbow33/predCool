@@ -30,4 +30,3 @@ optimizer = torch.optim.Adam(params=model.parameters(),lr = LR)
 loss_fn = nn.MSELoss()
 
 print(logs.shape)
-

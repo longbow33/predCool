@@ -6,7 +6,7 @@ import re
 cwd = os.getcwd()
 git_root = git.Repo(cwd,search_parent_directories= True)
 git_root = Path(git_root.git.rev_parse("--show-toplevel"))
-mavlogdump_path = os.path.join(git_root,"01_data_augmentation_test")
+mavlogdump_path = os.path.join(git_root,"loghandling")
 
 log_types = ["AETR","AHR2","GPS","IMU"]
 
